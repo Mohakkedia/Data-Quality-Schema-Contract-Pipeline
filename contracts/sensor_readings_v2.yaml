@@ -1,0 +1,52 @@
+# sensor_readings_v2.yaml
+# --------------------------
+# v2 of the sensor_readings contract. Adds `firmware_version` (the sensor
+# package's firmware, needed after a fleet firmware rollout so downstream
+# consumers can filter/segment by it) as a required field. This is a
+# BREAKING change for any producer still on v1 — see CHANGELOG.md.
+
+contract_name: sensor_readings
+contract_version: 2
+effective_date: "2026-09-09"
+supersedes: 1
+
+fields:
+  - name: line_id
+    type: string
+    required: true
+    allowed_values: [LINE-01, LINE-02, LINE-03, LINE-04]
+
+  - name: timestamp
+    type: datetime
+    required: true
+
+  - name: temperature_c
+    type: float
+    required: true
+    min_value: 0.0
+    max_value: 150.0
+    drift_check: true
+    baseline_mean: 70.0
+    baseline_std: 6.0
+
+  - name: vibration_mm_s
+    type: float
+    required: true
+    min_value: 0.0
+    max_value: 10.0
+    drift_check: true
+    baseline_mean: 0.85
+    baseline_std: 0.15
+
+  - name: throughput_units_min
+    type: integer
+    required: true
+    min_value: 0
+    max_value: 200
+
+  - name: firmware_version
+    type: string
+    required: true
+    allowed_values: [v2.3.1, v2.4.0, v2.4.1]
+
+primary_key: [line_id, timestamp]
